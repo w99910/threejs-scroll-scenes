@@ -12,8 +12,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ MyThree)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
-/* harmony import */ var three_examples_jsm_controls_OrbitControls__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three/examples/jsm/controls/OrbitControls */ "./node_modules/three/examples/jsm/controls/OrbitControls.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var three_examples_jsm_controls_OrbitControls__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three/examples/jsm/controls/OrbitControls */ "./node_modules/three/examples/jsm/controls/OrbitControls.js");
+/* harmony import */ var _shaders_fragment_glsl__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./shaders/fragment.glsl */ "./main/shaders/fragment.glsl");
+/* harmony import */ var _shaders_vertexShader_glsl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./shaders/vertexShader.glsl */ "./main/shaders/vertexShader.glsl");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -23,26 +25,28 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 
+
+
 var MyThree = /*#__PURE__*/function () {
   function MyThree(options) {
     _classCallCheck(this, MyThree);
 
-    this.scene = new three__WEBPACK_IMPORTED_MODULE_0__.Scene();
+    this.scene = new three__WEBPACK_IMPORTED_MODULE_2__.Scene();
     this.container = options.dom;
     this.width = this.container.offsetWidth;
     this.height = this.container.offsetHeight;
-    this.renderer = new three__WEBPACK_IMPORTED_MODULE_0__.WebGLRenderer();
+    this.renderer = new three__WEBPACK_IMPORTED_MODULE_2__.WebGLRenderer();
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1));
     this.renderer.setSize(this.width, this.height);
     this.renderer.setClearColor(0xffffff, 1);
     this.renderer.physicallyCorrectLights = true;
-    this.renderer.outputEncoding = three__WEBPACK_IMPORTED_MODULE_0__.sRGBEncoding;
+    this.renderer.outputEncoding = three__WEBPACK_IMPORTED_MODULE_2__.sRGBEncoding;
     this.container.appendChild(this.renderer.domElement);
-    this.camera = new three__WEBPACK_IMPORTED_MODULE_0__.PerspectiveCamera(75, this.width / this.height, 0.1, 1000);
+    this.camera = new three__WEBPACK_IMPORTED_MODULE_2__.PerspectiveCamera(75, this.width / this.height, 0.1, 1000);
     this.camera.position.z = 3;
-    this.controls = new three_examples_jsm_controls_OrbitControls__WEBPACK_IMPORTED_MODULE_1__.OrbitControls(this.camera, this.renderer.domElement);
+    this.controls = new three_examples_jsm_controls_OrbitControls__WEBPACK_IMPORTED_MODULE_3__.OrbitControls(this.camera, this.renderer.domElement);
     this.controls.listenToKeyEvents(window);
-    this.clock = new three__WEBPACK_IMPORTED_MODULE_0__.Clock();
+    this.clock = new three__WEBPACK_IMPORTED_MODULE_2__.Clock();
     this.dt; // optional
     //controls.addEventListener( 'change', render ); // call this only in static scenes (i.e., if there is no animation loop)
 
@@ -50,8 +54,8 @@ var MyThree = /*#__PURE__*/function () {
 
     this.controls.dampingFactor = 0.05;
     this.controls.screenSpacePanning = false;
-    this.controls.minDistance = 2;
-    this.controls.maxDistance = 500;
+    this.controls.minDistance = 0;
+    this.controls.maxDistance = 200;
     this.controls.maxPolarAngle = Math.PI / 2;
     this.addObjects();
     this.render();
@@ -61,7 +65,7 @@ var MyThree = /*#__PURE__*/function () {
     key: "render",
     value: function render() {
       this.dt = this.clock.getDelta();
-      if (this.cube) this.cube.rotation.x += this.dt;
+      if (this.cube) this.cube.rotation.x += this.dt * 0.4;
       if (this.camera) this.renderer.render(this.scene, this.camera);
       if (this.controls) this.controls.update();
       window.requestAnimationFrame(this.render.bind(this));
@@ -69,11 +73,13 @@ var MyThree = /*#__PURE__*/function () {
   }, {
     key: "addObjects",
     value: function addObjects() {
-      var geometry = new three__WEBPACK_IMPORTED_MODULE_0__.BoxGeometry();
-      var material = new three__WEBPACK_IMPORTED_MODULE_0__.MeshBasicMaterial({
-        color: 0x00ff00
+      var planeGeo = new three__WEBPACK_IMPORTED_MODULE_2__.PlaneGeometry(1, 1, 100, 100);
+      var material = new three__WEBPACK_IMPORTED_MODULE_2__.RawShaderMaterial({
+        vertexShader: _shaders_vertexShader_glsl__WEBPACK_IMPORTED_MODULE_1__.default,
+        fragmentShader: _shaders_fragment_glsl__WEBPACK_IMPORTED_MODULE_0__.default,
+        side: three__WEBPACK_IMPORTED_MODULE_2__.DoubleSide
       });
-      this.cube = new three__WEBPACK_IMPORTED_MODULE_0__.Mesh(geometry, material);
+      this.cube = new three__WEBPACK_IMPORTED_MODULE_2__.Mesh(planeGeo, material);
       this.scene.add(this.cube);
     }
   }]);
@@ -99,6 +105,34 @@ window.addEventListener('DOMContentLoaded', function () {
 __webpack_require__.r(__webpack_exports__);
 // extracted by mini-css-extract-plugin
 
+
+/***/ }),
+
+/***/ "./main/shaders/fragment.glsl":
+/*!************************************!*\
+  !*** ./main/shaders/fragment.glsl ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("precision mediump float;\n#define GLSLIFY 1\nvoid main(){\n    gl_FragColor = vec4(1.,0.,0.,1.);\n}");
+
+/***/ }),
+
+/***/ "./main/shaders/vertexShader.glsl":
+/*!****************************************!*\
+  !*** ./main/shaders/vertexShader.glsl ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("#define GLSLIFY 1\nuniform mat4 projectionMatrix;\nuniform mat4 viewMatrix;\nuniform mat4 modelMatrix;\n\nattribute vec3 position;\n\nvoid main(){\n    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position,1.0);\n}");
 
 /***/ }),
 

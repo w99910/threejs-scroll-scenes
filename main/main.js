@@ -1,5 +1,9 @@
 import * as THREE from 'three';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
+
+import fragmentShader from './shaders/fragment.glsl';
+import vertexShader from './shaders/vertexShader.glsl';
+
 export default class MyThree {
        constructor(options){
         this.scene     = new THREE.Scene();
@@ -29,8 +33,8 @@ export default class MyThree {
 
 				this.controls.screenSpacePanning = false;
 
-				this.controls.minDistance = 2;
-				this.controls.maxDistance = 500;
+				this.controls.minDistance = 0;
+				this.controls.maxDistance = 200;
 
 				this.controls.maxPolarAngle = Math.PI / 2;
                 this.addObjects();
@@ -39,15 +43,19 @@ export default class MyThree {
     }
     render(){
         this.dt = this.clock.getDelta();
-        if(this.cube)this.cube.rotation.x += this.dt;
+        if(this.cube)this.cube.rotation.x += this.dt*0.4;
         if(this.camera)this.renderer.render(this.scene,this.camera);
         if(this.controls)this.controls.update();
         window.requestAnimationFrame(this.render.bind(this))
     }
     addObjects(){
-        const geometry = new THREE.BoxGeometry();
-        const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-        this.cube = new THREE.Mesh(geometry,material);
+        const planeGeo = new THREE.PlaneGeometry(1,1,100,100);
+        const material = new THREE.RawShaderMaterial({
+             vertexShader:vertexShader,
+             fragmentShader:fragmentShader,
+             side:THREE.DoubleSide,
+        });
+        this.cube = new THREE.Mesh(planeGeo,material);
         this.scene.add(this.cube);
        }
 
