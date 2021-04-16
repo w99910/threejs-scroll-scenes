@@ -1,10 +1,10 @@
 let mix = require('laravel-mix');
 
+// .postCss('main/main.css','public/index.css',[
+  //     require('tailwindcss'),
+  // ])
 mix.js('main/main.js', 'index.js').setPublicPath('public')
-  .postCss('main/main.css','public/index.css',[
-      require('tailwindcss'),
-  ])
-  .webpackConfig({
+   .webpackConfig({
     module: {
       rules: [
         {
