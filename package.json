@@ -2,14 +2,12 @@
   "name": "mythreejs",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "watch": {
-    "change": "main/*.js"
-  },
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "npm-watch",
-    "change": "npx mix"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "author": "",
   "license": "ISC",
@@ -23,7 +21,8 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.2.5",
-    "laravel-mix": "^6.0.16",
-    "postcss": "^8.2.10"
+    "postcss": "^8.2.10",
+    "vite": "^4.0.3",
+    "vite-plugin-glsl": "^1.0.1"
   }
 }
