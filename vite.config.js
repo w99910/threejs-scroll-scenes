@@ -1,7 +1,12 @@
 import { defineConfig } from "vite";
 import glsl from "vite-plugin-glsl";
 export default defineConfig({
-  plugins: [glsl()],
+  plugins: [
+    glsl({
+      root: "src",
+    }),
+  ],
+  root: "src",
   build: {
     outDir: "public",
   },
